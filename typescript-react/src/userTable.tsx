@@ -46,7 +46,7 @@ interface User {
   modifiedOn?: Date;
 }
 
-class UserTableData implements User {
+class userTableData implements User {
   firstName: string;
   middleName?: string;
   lastName?: string;
@@ -117,7 +117,7 @@ const initialData: User[] = [
 ]
 
 const userCrudOperations = new userCrud<User>();
-initialData.forEach((userData) => userCrudOperations.create(new UserTableData(userData)));
+initialData.forEach((userData) => userCrudOperations.create(new userTableData(userData)));
 
 const UserTable: React.FC = () => {
   const [users, setUsers] = useState<User[]>(initialData);
