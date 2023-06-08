@@ -1,39 +1,123 @@
 import React, { useState } from 'react';
 
+// Date Time Formatter Decorator
+const DateTimeFormatter = (target: any, propertyKey: string): void => {
+  
+  let value = target[propertyKey];
+
+  const getter = () => {
+    const date = new Date(value);
+    return date.toLocaleString();
+  };
+
+  const setter = (newValue: any) => {
+    value = newValue;
+  };
+
+  Object.defineProperty(target, propertyKey, {
+    get: getter,
+    set: setter,
+    enumerable: true,
+    configurable: true,
+  });
+}
+
+enum Role {
+  SuperAdmin = 'SuperAdmin',
+  Admin = 'Admin',
+  Subscriber = 'Subscriber'
+}
+
+interface CrudActions<T> {
+  create(value: T): void,
+  read(): T[],
+  update(index: number, value: T): void,
+  delete(index: number): void
+}
 interface User {
   firstName: string;
   middleName?: string;
   lastName?: string;
   email: string;
   phoneNumber?: string;
-  role: string;
+  role: Role;
   address?: string;
-  createdOn?: string;
-  modifiedOn?: string;
+  createdOn?: Date;
+  modifiedOn?: Date;
 }
 
 class UserTableData implements User {
-  constructor(
-    public firstName: string,
-    public email: string,
-    public role: string,
-    public middleName?: string,
-    public lastName?: string,
-    public phoneNumber?: string,
-    public address?: string,
-    public createdOn?: string,
-    public modifiedOn?: string
-  ) {}
+  firstName: string;
+  middleName?: string;
+  lastName?: string;
+  email: string;
+  phoneNumber?: string;
+  role: Role;
+  address?: string;
+
+  @DateTimeFormatter
+  createdOn?: Date;
+
+  @DateTimeFormatter
+  modifiedOn?: Date;
+
+  constructor(data: User) {
+    this.firstName = data.firstName;
+    this.middleName = data.middleName;
+    this.lastName = data.lastName;
+    this.email = data.email;
+    this.phoneNumber = data.phoneNumber;
+    this.role = data.role;
+    this.address = data.address;
+    this.createdOn = data.createdOn;
+    this.modifiedOn = data.modifiedOn;
+  }
+}
+
+
+class UserCrud<T> implements CrudActions<T> {
+  private value: T[];
+
+  constructor() {
+    this.value = [];
+  }
+
+  create(item: T): void {
+    this.value.push(item);
+  }
+
+  read(): T[] {
+    return this.value;
+  }
+
+  update(index: number, item: T): void {
+    this.value[index] = item;
+  }
+
+  delete(index: number): void {
+    this.value.splice(index, 1);
+  }
 }
 
 const initialData: User[] = [
-  new UserTableData('Akshay', 'akshay@example.com', 'Admin'),
-  new UserTableData('Rahul', 'rahul@example.com', 'User'),
-  new UserTableData('Ravi', 'ravi@example.com', 'Admin'),
-  new UserTableData('Rohan', 'rohan@example.com', 'User'),
-  new UserTableData('Nakul', 'nakul@example.com', 'Admin'),
-  new UserTableData('Sandeep', 'sandeep@example.com', 'User'),
-];
+  {
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john@example.com',
+      role: Role.Admin,
+      createdOn: new Date()
+    },
+    {
+      firstName: 'Jane',
+      lastName: 'Smith',
+      email: 'jane@example.com',
+      role: Role.Subscriber,
+      createdOn: new Date()
+    },
+]
+
+const userCrudOperations = new UserCrud<User>();
+initialData.forEach((userData) => userCrudOperations.create(new UserTableData(userData)));
 
 const UserTable: React.FC = () => {
   const [users, setUsers] = useState<User[]>(initialData);
@@ -63,7 +147,7 @@ const handleSave = (index: number) => {
     updatedUser.lastName = lastNameInput.value;
     updatedUser.email = emailInput.value;
     updatedUser.phoneNumber = phoneNumberInput.value;
-    updatedUser.role = roleInput.value;
+    updatedUser.role = roleInput.value as Role;
     updatedUser.address = addressInput.value;
 
     updatedUsers[index] = updatedUser;
@@ -154,8 +238,8 @@ const handleSave = (index: number) => {
                   user.address
                 )}
               </td>
-              <td>{user.createdOn}</td>
-              <td>{user.modifiedOn}</td>
+              <td>{user.createdOn?.toLocaleString()}</td>
+              <td>{user.modifiedOn?.toLocaleString()}</td>
               <td>
                 {editingIndex === index ? (
                   <div>
