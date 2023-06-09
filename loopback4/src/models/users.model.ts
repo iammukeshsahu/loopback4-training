@@ -14,18 +14,49 @@ export class Users extends Entity {
     type: 'string',
     required: true,
   })
-  name: string;
+  firstName: string;
 
   @property({
     type: 'string',
     required: true,
   })
-  lastname: string;
+  email: string;
+
+  @property({
+    type: 'string',
+  })
+  lastName?: string;
+
+  @property({
+    type: 'string',
+  })
+  middleName?: string;
 
   @property({
     type: 'string',
   })
   address?: string;
+
+  @property({
+    type: 'string',
+  })
+  modifiedOn?: string;
+
+  @property({
+    type: 'string',
+  })
+  createdOn?: string;
+
+  @property({
+    type: 'string',
+    required: true
+  })
+  role: string;
+
+  @property({
+    type: 'string'
+  })
+  phoneNumber: string;
 
 
   constructor(data?: Partial<Users>) {
