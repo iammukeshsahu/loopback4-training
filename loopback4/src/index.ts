@@ -1,4 +1,7 @@
 import {ApplicationConfig, Users} from './application';
+import { config } from 'dotenv';
+
+config();
 
 export * from './application';
 
