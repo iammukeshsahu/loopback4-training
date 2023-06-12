@@ -1,26 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { getUsers, createUser, updateUser, deleteUser } from './api/api';
 
-// Date Time Formatter Decorator
-const DateTimeFormatter = (target: any, propertyKey: string): void => {
-  
-  let value = target[propertyKey];
 
-  const getter = () => {
-    const date = new Date(value);
-    return date.toLocaleString();
-  };
 
-  const setter = (newValue: any) => {
-    value = newValue;
-  };
-
-  Object.defineProperty(target, propertyKey, {
-    get: getter,
-    set: setter,
-    enumerable: true,
-    configurable: true,
-  });
-}
 
 enum Role {
   SuperAdmin = 'SuperAdmin',
@@ -28,13 +10,8 @@ enum Role {
   Subscriber = 'Subscriber'
 }
 
-interface CrudActions<T> {
-  create(value: T): void,
-  read(): T[],
-  update(index: number, value: T): void,
-  delete(index: number): void
-}
 interface User {
+  id: number
   firstName: string;
   middleName?: string;
   lastName?: string;
@@ -46,94 +23,35 @@ interface User {
   modifiedOn?: Date;
 }
 
-class UserTableData implements User {
-  firstName: string;
-  middleName?: string;
-  lastName?: string;
-  email: string;
-  phoneNumber?: string;
-  role: Role;
-  address?: string;
-
-  @DateTimeFormatter
-  createdOn?: Date;
-
-  @DateTimeFormatter
-  modifiedOn?: Date;
-
-  constructor(data: User) {
-    this.firstName = data.firstName;
-    this.middleName = data.middleName;
-    this.lastName = data.lastName;
-    this.email = data.email;
-    this.phoneNumber = data.phoneNumber;
-    this.role = data.role;
-    this.address = data.address;
-    this.createdOn = data.createdOn;
-    this.modifiedOn = data.modifiedOn;
-  }
-}
 
 
-class UserCrud<T> implements CrudActions<T> {
-  private value: T[];
-
-  constructor() {
-    this.value = [];
-  }
-
-  create(item: T): void {
-    this.value.push(item);
-  }
-
-  read(): T[] {
-    return this.value;
-  }
-
-  update(index: number, item: T): void {
-    this.value[index] = item;
-  }
-
-  delete(index: number): void {
-    this.value.splice(index, 1);
-  }
-}
-
-const initialData: User[] = [
-  {
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john@example.com',
-      role: Role.Admin,
-      createdOn: new Date()
-    },
-    {
-      firstName: 'Jane',
-      lastName: 'Smith',
-      email: 'jane@example.com',
-      role: Role.Subscriber,
-      createdOn: new Date()
-    },
-]
-
-const userCrudOperations = new UserCrud<User>();
-initialData.forEach((userData) => userCrudOperations.create(new UserTableData(userData)));
 
 const UserTable: React.FC = () => {
-  const [users, setUsers] = useState<User[]>(initialData);
+  const [users, setUsers] = useState<User[]>([]);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [newUser, setNewUser] = useState<User>({
+    id: 0,
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    email: '',
+    phoneNumber: '',
+    role: Role.Subscriber,
+    address: '',
+  });
+  useEffect(() => {
+    getUsers().then((user) => {
+      setUsers(user);
+    })
+  }, [])
 
   const handleEdit = (index: number) => {
     setEditingIndex(index);
   };
 
-const handleSave = (index: number) => {
-  setEditingIndex(null);
-
-  setUsers((prevUsers) => {
-    const updatedUsers = [...prevUsers];
-    const updatedUser = { ...updatedUsers[index] };
-
+  const handleSave = async (index: number) => {
+    setEditingIndex(null);
+    const updatedUser = { ...users[index] };
     const firstNameInput = document.getElementById(`firstName-${index}`) as HTMLInputElement;
     const middleNameInput = document.getElementById(`middleName-${index}`) as HTMLInputElement;
     const lastNameInput = document.getElementById(`lastName-${index}`) as HTMLInputElement;
@@ -141,7 +59,6 @@ const handleSave = (index: number) => {
     const phoneNumberInput = document.getElementById(`phoneNumber-${index}`) as HTMLInputElement;
     const roleInput = document.getElementById(`role-${index}`) as HTMLInputElement;
     const addressInput = document.getElementById(`address-${index}`) as HTMLInputElement;
-
     updatedUser.firstName = firstNameInput.value;
     updatedUser.middleName = middleNameInput.value;
     updatedUser.lastName = lastNameInput.value;
@@ -149,23 +66,43 @@ const handleSave = (index: number) => {
     updatedUser.phoneNumber = phoneNumberInput.value;
     updatedUser.role = roleInput.value as Role;
     updatedUser.address = addressInput.value;
+    await updateUser(updatedUser.id, updatedUser)
 
-    updatedUsers[index] = updatedUser;
-    return updatedUsers;
-  });
-};
+    setUsers((prevUsers) => {
+      const updatedUsers = [...prevUsers];
+      updatedUsers[index] = updatedUser;
+      return updatedUsers;
+    });
+  };
 
   const handleCancel = () => {
     setEditingIndex(null);
   };
 
-  const handleDelete = (index: number) => {
+  const handleDelete = async (index: number) => {
+    await deleteUser(users[index].id)
     setUsers((prevUsers) => prevUsers.filter((_, i) => i !== index));
   };
 
   const handleRefresh = () => {
-    // Refresh the user data
-    setUsers(initialData)
+    getUsers().then(user => {
+      setUsers(user);
+    })
+  };
+
+  const handleCreate = async () => {
+      const createdUser = await createUser(newUser);
+      setUsers(prevUsers => [...prevUsers, createdUser]);
+      setNewUser({
+        id:0,
+        firstName: '',
+        middleName: '',
+        lastName: '',
+        email: '',
+        phoneNumber: '',
+        role: Role.Subscriber,
+        address: '',
+      });
   };
 
   return (
@@ -257,6 +194,34 @@ const handleSave = (index: number) => {
           ))}
         </tbody>
       </table>
+      <h2>Create User</h2>
+      <div>
+          <label htmlFor="firstName">First Name:</label>
+          <input type="text" id="firstName" value={newUser.firstName} onChange={(e) => setNewUser({...newUser, firstName: e.target.value})} />
+        </div><div>
+            <label htmlFor="middleName">Middle Name:</label>
+            <input type="text" id="middleName" value={newUser.middleName} onChange={(e) => setNewUser({...newUser, middleName: e.target.value})} />
+          </div><div>
+            <label htmlFor="lastName">Last Name:</label>
+            <input type="text" id="lastName" value={newUser.lastName} onChange={(e) => setNewUser({...newUser, lastName: e.target.value})} />
+          </div><div>
+            <label htmlFor="email">Email:</label>
+            <input type="email" id="email" value={newUser.email} onChange={(e) => setNewUser({...newUser, email: e.target.value})} />
+          </div><div>
+            <label htmlFor="phoneNumber">Phone Number:</label>
+            <input type="text" id="phoneNumber" value={newUser.phoneNumber} onChange={(e) => setNewUser({...newUser, phoneNumber: e.target.value})} />
+          </div><div>
+            <label htmlFor="role">Role:</label>
+            <select id="role" value={newUser.role} onChange={(e) => setNewUser({...newUser, role: e.target.value as Role})}>
+              <option value={Role.Subscriber}>Subscriber</option>
+              <option value={Role.Admin}>Admin</option>
+              <option value={Role.SuperAdmin}>SuperAdmin</option>
+            </select>
+          </div><div>
+            <label htmlFor="address">Address:</label>
+            <input type="text" id="address" value={newUser.address} onChange={(e) => setNewUser({...newUser, address: e.target.value})} />
+          </div>
+      <button onClick={handleCreate}>Create User</button>
     </div>
   );
 };
