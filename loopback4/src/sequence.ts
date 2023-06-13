@@ -8,14 +8,15 @@ import {
   RestBindings,
   Send,
   SequenceHandler,
+  Reject
 } from '@loopback/rest';
-
-
+import logger from './logger/logger';
+import * as jwt from 'jsonwebtoken';
 const SequenceActions = RestBindings.SequenceActions;
-
 export class MySequence implements SequenceHandler {
   @inject(SequenceActions.INVOKE_MIDDLEWARE, { optional: true })
-  protected invokeMiddleware: InvokeMiddleware = () => false;
+  protected invokeMiddleware: InvokeMiddleware = () => false
+
 
   constructor(
     @inject(SequenceActions.FIND_ROUTE) protected findRoute: FindRoute,
@@ -23,7 +24,8 @@ export class MySequence implements SequenceHandler {
     protected parseParams: ParseParams,
     @inject(SequenceActions.INVOKE_METHOD)
     protected invoke: InvokeMethod,
-    @inject(SequenceActions.SEND) public send: Send
+    @inject(SequenceActions.SEND) public send: Send,
+    @inject(SequenceActions.REJECT) public reject: Reject,
   ) { }
 
   async handle(context: RequestContext) {
@@ -32,32 +34,61 @@ export class MySequence implements SequenceHandler {
     const { headers, ip } = request;
     //Log request information
     const referer = headers['referer'];
-    console.log('Request Start Time:', requestStartTime);
-    console.log('Referer:', referer);
-    console.log('User Agent:', headers['user-agent']);
-    console.log('Request IP:', ip);
+    logger.info('Request Start Time:', { requestStartTime });
+    logger.info('Referer:', { referer });
+    logger.info('User Agent:', { userAgent: headers['user-agent'] });
+    logger.info('Request IP:', { ipAddress: ip });
     try {
-      const allowedOrigin = process.env.ALLOWED_ORIGIN;
-      if (referer !== allowedOrigin) {
-        throw new Error('Referer not allowed');
+      logger.info('Request received:', {
+        method: context.request.method,
+        url: context.request.url,
+      });
+      const { cookie } = headers;
+      if (cookie) {
+        const userId = decryptCookie(cookie);
+        const token = createJwtToken(userId);
+        context.request.headers.authorization = `Bearer ${token}`;
       }
-      const finished = await this.invokeMiddleware(context);
-      if (finished) return;
+      // const allowedOrigin = process.env.ALLOWED_ORIGIN;
+      // if (referer && referer !== allowedOrigin) {
+      //   throw new Error('Referer not allowed');
+      // }
+      const isMiddlewareFinished = await this.invokeMiddleware(context);
+      if (isMiddlewareFinished) return;
       const route = this.findRoute(request);
       const args = await this.parseParams(request, route);
       const result = await this.invoke(route, args);
       this.send(response, result);
       const completionTime = Date.now();
-
+      logger.info('Response sent:', {
+        statusCode: context.response.statusCode,
+      });
       // Log completion time
-      console.log('Completion Time:', completionTime);
+      logger.info('Completion Time:', { completionTime });
     } catch (error) {
       const errorTime = Date.now();
 
       // Log error time
-      console.log('Error Time:', errorTime);
-
-      throw error;
+      logger.error('Error Time:', { errorTime });
+      logger.error('Failed to load the application', { error })
+      this.reject(context, error);
     }
   }
+}
+
+function decryptCookie(cookie: string): string {
+  const cookiePairs = cookie.split(';');
+  for (const pair of cookiePairs) {
+    const [key, value] = pair.trim().split('=');
+    if (key === 'userId') {
+      return value;
+    }
+  }
+  return '';
+}
+
+function createJwtToken(userId: string): string {
+  const SECRET_KEY = 'Enter your secret key';
+  const token = jwt.sign({ userId }, SECRET_KEY, { expiresIn: '1h' });
+  return token;
 }

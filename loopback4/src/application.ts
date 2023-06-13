@@ -9,7 +9,6 @@ import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
-
 export {ApplicationConfig};
 
 export class Users extends BootMixin(
@@ -17,8 +16,6 @@ export class Users extends BootMixin(
 ) {
   constructor(options: ApplicationConfig = {}) {
     super(options);
-
-    // Set up the custom sequence
     this.sequence(MySequence);
 
     // Set up default home page
