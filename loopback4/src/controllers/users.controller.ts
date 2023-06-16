@@ -16,6 +16,7 @@ import {
   del,
   requestBody,
   response,
+  ResponseObject
 } from '@loopback/rest';
 import {Users} from '../models';
 import {UsersRepository} from '../repositories';
@@ -112,8 +113,25 @@ export class UsersController {
   }
 
   @patch('/users/{id}')
-  @response(204, {
+  @response(200, {
     description: 'Users PATCH success',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object',
+          properties: {
+            message: {
+              type: 'string',
+              description: 'Success message',
+            },
+            status: {
+              type: 'number',
+              statusCode: 200
+            }
+          },
+        },
+      },
+    },
   })
   async updateById(
     @param.path.number('id') id: number,
@@ -125,8 +143,12 @@ export class UsersController {
       },
     })
     users: Users,
-  ): Promise<void> {
+  ): Promise<ResponseObject> {
     await this.usersRepository.updateById(id, users);
+    return {
+      description: 'User updated Successfully',
+      statusCode: 200
+    }
   }
 
   @put('/users/{id}')
@@ -141,7 +163,7 @@ export class UsersController {
   }
 
   @del('/users/{id}')
-  @response(204, {
+  @response(200, {
     description: 'Users DELETE success',
   })
   async deleteById(@param.path.number('id') id: number): Promise<void> {

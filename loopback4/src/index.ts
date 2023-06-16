@@ -19,7 +19,7 @@ export async function main(options: ApplicationConfig = {}) {
 
 if (require.main === module) {
   // Run the application
-  const config = {
+  const lbConfig = {
     rest: {
       port: +(process.env.PORT ?? 3000),
       host: process.env.HOST,
@@ -35,7 +35,7 @@ if (require.main === module) {
       },
     },
   };
-  main(config).catch(err => {
+  main(lbConfig).catch(err => {
     console.error('Cannot start the application.', err);
     process.exit(1);
   });

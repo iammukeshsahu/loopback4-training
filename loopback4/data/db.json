@@ -1,11 +1,18 @@
 {
   "ids": {
-    "Users": 10
+    "Users": 18
   },
   "models": {
     "Users": {
-      "8": "{\"id\":8,\"firstName\":\"test\",\"email\":\"test@gmail.com\",\"lastName\":\"string\",\"middleName\":\"string\",\"address\":\"string\",\"modifiedOn\":\"string\",\"createdOn\":\"string\",\"role\":\"subscriber\",\"phoneNumber\":\"string\"}",
-      "9": "{\"id\":9,\"firstName\":\"test123\",\"email\":\"test1234@gmail.com\",\"lastName\":\"string\",\"middleName\":\"string\",\"address\":\"string\",\"modifiedOn\":\"string\",\"createdOn\":\"string\",\"role\":\"subscriber\",\"phoneNumber\":\"string\"}"
+      "9": "{\"id\":9,\"firstName\":\"testing\",\"email\":\"testing@gmail.com\",\"lastName\":\"string\",\"middleName\":\"string\",\"address\":\"string\",\"modifiedOn\":\"string\",\"createdOn\":\"string\",\"role\":\"Admin\",\"phoneNumber\":\"string\"}",
+      "10": "{\"id\":10,\"firstName\":\"testing\",\"email\":\"testing@gmail.com\",\"lastName\":\"\",\"middleName\":\"\",\"address\":\"\",\"role\":\"Subscriber\",\"phoneNumber\":\"\"}",
+      "11": "{\"id\":11,\"firstName\":\"123322\",\"email\":\"123322@gmail.com\",\"lastName\":\"string\",\"middleName\":\"string\",\"address\":\"string\",\"role\":\"string\",\"phoneNumber\":\"string\",\"modifiedOn\":\"string\",\"createdOn\":\"string\"}",
+      "12": "{\"id\":12,\"firstName\":\"testing\",\"email\":\"testing@gmail.com\",\"lastName\":\"\",\"middleName\":\"\",\"address\":\"\",\"role\":\"Subscriber\",\"phoneNumber\":\"\"}",
+      "13": "{\"id\":13,\"firstName\":\"testing\",\"email\":\"testing@gmail.com\",\"lastName\":\"\",\"middleName\":\"\",\"address\":\"\",\"role\":\"Subscriber\",\"phoneNumber\":\"\"}",
+      "14": "{\"id\":14,\"firstName\":\"testing\",\"email\":\"testing@gmail.com\",\"lastName\":\"\",\"middleName\":\"\",\"address\":\"\",\"role\":\"Subscriber\",\"phoneNumber\":\"\"}",
+      "15": "{\"id\":15,\"firstName\":\"testing\",\"email\":\"testing@gmail.com\",\"lastName\":\"\",\"middleName\":\"\",\"address\":\"\",\"role\":\"Subscriber\",\"phoneNumber\":\"\"}",
+      "16": "{\"id\":16,\"firstName\":\"testing\",\"email\":\"testing@gmail.com\",\"lastName\":\"\",\"middleName\":\"\",\"address\":\"\",\"role\":\"Subscriber\",\"phoneNumber\":\"\"}",
+      "17": "{\"id\":17,\"firstName\":\"testing\",\"email\":\"testing@gmail.com\",\"lastName\":\"\",\"middleName\":\"\",\"address\":\"\",\"role\":\"Subscriber\",\"phoneNumber\":\"\"}"
     }
   }
 }

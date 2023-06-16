@@ -22,7 +22,8 @@
     "eslint": "lb-eslint --report-unused-disable-directives .",
     "eslint:fix": "npm run eslint -- --fix",
     "pretest": "npm run rebuild",
-    "test": "lb-mocha --allow-console-logs \"dist/__tests__\"",
+    "test": "lb-nyc npm run mocha",
+    "mocha": "lb-mocha --allow-console-logs \"dist/__tests__\"",
     "posttest": "npm run lint",
     "test:dev": "lb-mocha --allow-console-logs dist/__tests__/**/*.js && npm run posttest",
     "docker:build": "docker build -t loopback4 .",
@@ -34,7 +35,11 @@
     "prestart": "npm run rebuild",
     "start": "node -r source-map-support/register .",
     "clean": "lb-clean dist *.tsbuildinfo .eslintcache",
-    "rebuild": "npm run clean && npm run build"
+    "rebuild": "npm run clean && npm run build",
+    "precoverage": "npm test",
+    "coverage": "open coverage/index.html",
+    "coverage:ci": "lb-nyc report --reporter=text-lcov | coveralls",
+    "test:ci": "lb-nyc npm run mocha"
   },
   "repository": {
     "type": "git",
@@ -60,11 +65,13 @@
   },
   "devDependencies": {
     "@loopback/build": "^10.0.0",
-    "source-map-support": "^0.5.21",
-    "@loopback/testlab": "^6.0.0",
-    "@types/node": "^14.18.47",
     "@loopback/eslint-config": "^14.0.0",
+    "@loopback/testlab": "^6.0.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^14.18.47",
     "eslint": "^8.40.0",
+    "mocha": "^10.2.0",
+    "source-map-support": "^0.5.21",
     "typescript": "~4.9.5"
   }
 }
