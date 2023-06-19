@@ -42,6 +42,7 @@ export class MySequence implements SequenceHandler {
     logger.info('User Agent:', { userAgent: headers['user-agent'] });
     logger.info('Request IP:', { ipAddress: ip });
     try {
+<<<<<<< HEAD
       logger.info('Request received:', {
         method: context.request.method,
         url: context.request.url,
@@ -58,6 +59,14 @@ export class MySequence implements SequenceHandler {
       // }
       const isMiddlewareFinished = await this.invokeMiddleware(context);
       if (isMiddlewareFinished) return;
+=======
+      // const allowedOrigin = process.env.ALLOWED_ORIGIN;
+      // if (referer !== allowedOrigin) {
+      //   throw new Error('Referer not allowed');
+      // }
+      const finished = await this.invokeMiddleware(context);
+      if (finished) return;
+>>>>>>> dd2f16464b1a294119ebb14cdd01d0e419869587
       const route = this.findRoute(request);
       const args = await this.parseParams(request, route);
       const result = await this.invoke(route, args);
