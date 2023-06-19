@@ -12,7 +12,10 @@ import {
 } from '@loopback/rest';
 import logger from './logger/logger';
 import * as jwt from 'jsonwebtoken';
+
 const SequenceActions = RestBindings.SequenceActions;
+const secretKey = process.env.SECRET_KEY;
+const expiryTime = process.env.EXPIRY_TIME
 export class MySequence implements SequenceHandler {
   @inject(SequenceActions.INVOKE_MIDDLEWARE, { optional: true })
   protected invokeMiddleware: InvokeMiddleware = () => false
@@ -74,21 +77,4 @@ export class MySequence implements SequenceHandler {
       this.reject(context, error);
     }
   }
-}
-
-function decryptCookie(cookie: string): string {
-  const cookiePairs = cookie.split(';');
-  for (const pair of cookiePairs) {
-    const [key, value] = pair.trim().split('=');
-    if (key === 'userId') {
-      return value;
-    }
-  }
-  return '';
-}
-
-function createJwtToken(userId: string): string {
-  const SECRET_KEY = 'Enter your secret key';
-  const token = jwt.sign({ userId }, SECRET_KEY, { expiresIn: '1h' });
-  return token;
 }
