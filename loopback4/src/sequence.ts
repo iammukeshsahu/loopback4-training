@@ -37,10 +37,10 @@ export class MySequence implements SequenceHandler {
     console.log('User Agent:', headers['user-agent']);
     console.log('Request IP:', ip);
     try {
-      const allowedOrigin = process.env.ALLOWED_ORIGIN;
-      if (referer !== allowedOrigin) {
-        throw new Error('Referer not allowed');
-      }
+      // const allowedOrigin = process.env.ALLOWED_ORIGIN;
+      // if (referer !== allowedOrigin) {
+      //   throw new Error('Referer not allowed');
+      // }
       const finished = await this.invokeMiddleware(context);
       if (finished) return;
       const route = this.findRoute(request);

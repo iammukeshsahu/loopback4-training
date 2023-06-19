@@ -1,8 +1,11 @@
 {
   "ids": {
-    "Users": 8
+    "Users": 10
   },
   "models": {
-    "Users": {}
+    "Users": {
+      "8": "{\"id\":8,\"firstName\":\"test\",\"email\":\"test@gmail.com\",\"lastName\":\"string\",\"middleName\":\"string\",\"address\":\"string\",\"modifiedOn\":\"string\",\"createdOn\":\"string\",\"role\":\"subscriber\",\"phoneNumber\":\"string\"}",
+      "9": "{\"id\":9,\"firstName\":\"test123\",\"email\":\"test1234@gmail.com\",\"lastName\":\"string\",\"middleName\":\"string\",\"address\":\"string\",\"modifiedOn\":\"string\",\"createdOn\":\"string\",\"role\":\"subscriber\",\"phoneNumber\":\"string\"}"
+    }
   }
 }
