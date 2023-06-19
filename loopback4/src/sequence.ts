@@ -47,13 +47,11 @@ export class MySequence implements SequenceHandler {
         method: context.request.method,
         url: context.request.url,
       });
-      // const { cookie } = headers;
-      const cookie = 'userId=123456; sessionId=ABCDEF; token=xyz123';
+      const { cookie } = headers;
       if (cookie) {
         const userId = this.tokenService.decryptCookie(cookie);
         const token = this.tokenService.createJwtToken(userId);
         context.request.headers.authorization = `Bearer ${token}`;
-        console.log('context :>> ', context.request.headers.authorization);
       }
       // const allowedOrigin = process.env.ALLOWED_ORIGIN;
       // if (referer && referer !== allowedOrigin) {
