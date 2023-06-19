@@ -1,1 +1,1 @@
-export * from './rest-testing.datasource';
+export * from './users.datasource';
