@@ -11,11 +11,10 @@ import {
   Reject
 } from '@loopback/rest';
 import logger from './logger/logger';
-import * as jwt from 'jsonwebtoken';
+import { TokenService } from './middleware';
 
 const SequenceActions = RestBindings.SequenceActions;
-const secretKey = process.env.SECRET_KEY;
-const expiryTime = process.env.EXPIRY_TIME
+
 export class MySequence implements SequenceHandler {
   @inject(SequenceActions.INVOKE_MIDDLEWARE, { optional: true })
   protected invokeMiddleware: InvokeMiddleware = () => false
@@ -29,6 +28,8 @@ export class MySequence implements SequenceHandler {
     protected invoke: InvokeMethod,
     @inject(SequenceActions.SEND) public send: Send,
     @inject(SequenceActions.REJECT) public reject: Reject,
+    @inject('middleware.TokenService')
+    private tokenService: TokenService,
   ) { }
 
   async handle(context: RequestContext) {
@@ -42,16 +43,17 @@ export class MySequence implements SequenceHandler {
     logger.info('User Agent:', { userAgent: headers['user-agent'] });
     logger.info('Request IP:', { ipAddress: ip });
     try {
-<<<<<<< HEAD
       logger.info('Request received:', {
         method: context.request.method,
         url: context.request.url,
       });
-      const { cookie } = headers;
+      // const { cookie } = headers;
+      const cookie = 'userId=123456; sessionId=ABCDEF; token=xyz123';
       if (cookie) {
-        const userId = decryptCookie(cookie);
-        const token = createJwtToken(userId);
+        const userId = this.tokenService.decryptCookie(cookie);
+        const token = this.tokenService.createJwtToken(userId);
         context.request.headers.authorization = `Bearer ${token}`;
+        console.log('context :>> ', context.request.headers.authorization);
       }
       // const allowedOrigin = process.env.ALLOWED_ORIGIN;
       // if (referer && referer !== allowedOrigin) {
@@ -59,14 +61,6 @@ export class MySequence implements SequenceHandler {
       // }
       const isMiddlewareFinished = await this.invokeMiddleware(context);
       if (isMiddlewareFinished) return;
-=======
-      // const allowedOrigin = process.env.ALLOWED_ORIGIN;
-      // if (referer !== allowedOrigin) {
-      //   throw new Error('Referer not allowed');
-      // }
-      const finished = await this.invokeMiddleware(context);
-      if (finished) return;
->>>>>>> dd2f16464b1a294119ebb14cdd01d0e419869587
       const route = this.findRoute(request);
       const args = await this.parseParams(request, route);
       const result = await this.invoke(route, args);
