@@ -9,7 +9,7 @@ import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
-
+import { TokenService } from './middleware';
 export {ApplicationConfig};
 
 export class Users extends BootMixin(
@@ -17,9 +17,8 @@ export class Users extends BootMixin(
 ) {
   constructor(options: ApplicationConfig = {}) {
     super(options);
-
-    // Set up the custom sequence
     this.sequence(MySequence);
+    this.bind('middleware.TokenService').toClass(TokenService)
 
     // Set up default home page
     this.static('/', path.join(__dirname, '../public'));
