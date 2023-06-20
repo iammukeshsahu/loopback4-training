@@ -1,10 +1,15 @@
 {
   "ids": {
-    "Users": 2
+    "Users": 7
   },
   "models": {
     "Users": {
-      "1": "{\"id\":1,\"firstName\":\"testing\",\"middleName\":\"string\",\"lastName\":\"string\",\"address\":\"string\",\"password\":\"123445\",\"email\":\"testing@gmail.com\"}"
+      "1": "{\"id\":1,\"firstName\":\"testing\",\"middleName\":\"string\",\"lastName\":\"string\",\"address\":\"string\",\"password\":\"123445\",\"email\":\"testing@gmail.com\"}",
+      "2": "{\"id\":2,\"firstName\":\"Mike\",\"middleName\":\"string\",\"lastName\":\"string\",\"address\":\"string\",\"password\":\"12345678\",\"email\":\"mike@gmail.com\"}",
+      "3": "{\"id\":3,\"firstName\":\"Guru\",\"middleName\":\"string\",\"lastName\":\"string\",\"address\":\"string\",\"password\":\"123456789\",\"email\":\"guru@gmail.com\"}",
+      "4": "{\"id\":4,\"firstName\":\"chaley\",\"middleName\":\"string\",\"lastName\":\"string\",\"address\":\"USA\",\"password\":\"$2a$10$crxDaw66AGigCci3KSBvaOrVWYNane570VNaklIGHyUzDEcu37TSC\",\"email\":\"charley@gmail.com\"}",
+      "5": "{\"id\":5,\"firstName\":\"Shivam\",\"middleName\":\"string\",\"lastName\":\"string\",\"address\":\"New Delhi\",\"password\":\"$2a$10$GB2K5GgEL6h4Yw3Ir7.euOpeuuKtQzRQItQB17Bc0Ggupw.2GH6JW\",\"email\":\"shivam@gmail.com\"}",
+      "6": "{\"id\":6,\"firstName\":\"Testing123\",\"middleName\":\"string\",\"lastName\":\"tester\",\"address\":\"string\",\"password\":\"$2a$10$YRuTQQ0q7vbVDg4iUyx5rOwctG7uu9UR6Ao8Uv7undj.pZ4Dt7rZ2\",\"email\":\"testing123@gmail.com\"}"
     }
   }
 }

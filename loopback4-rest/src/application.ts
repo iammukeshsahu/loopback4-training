@@ -9,6 +9,9 @@ import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
+import { Hasher } from './services/password.hash';
+import { AuthenticationUserService } from './services/user-service';
+import { TokenService } from './services/jwt-service';
 
 export {ApplicationConfig};
 
@@ -20,6 +23,10 @@ export class Loopback4RestApplication extends BootMixin(
 
     // Set up the custom sequence
     this.sequence(MySequence);
+    // bind
+    this.bind('services.hasher').toClass(Hasher);
+    this.bind('services.AuthenticationUserService').toClass(AuthenticationUserService)
+    this.bind('services.TokenService').toClass(TokenService)
 
     // Set up default home page
     this.static('/', path.join(__dirname, '../public'));

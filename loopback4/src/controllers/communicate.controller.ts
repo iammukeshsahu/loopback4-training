@@ -13,7 +13,6 @@ export class MyController {
   @get('/users')
   async getData(): Promise<any> {
     const response = await axios.get(`${baseUrl}/users`);
-    console.log('response :>> ', response);
     return response.data;
   }
 
@@ -22,9 +21,8 @@ export class MyController {
     description: 'Users created successfully'
   })
   async createUsers(@requestBody() data: Users): Promise<any> {
-    console.log('data :>> ', data);
     const response = await axios.post(`${baseUrl}/users`, data);
-    console.log('response :>> ', response);
+
     return response.data;
   }
 }
