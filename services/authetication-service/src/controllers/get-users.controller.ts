@@ -5,9 +5,7 @@ import { authenticate, STRATEGY } from 'loopback4-authentication';
 import { PermissionKey } from '../permissions-keys';
 import {STATUS_CODE} from '@sourceloop/core';
 
-/**
- * OpenAPI response for ping()
- */
+
 const GET_USERS_RESPONSE: ResponseObject = {
   description: 'Ping Response',
   content: {
