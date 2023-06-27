@@ -7,9 +7,9 @@ const config = {
   url: '',
   host: 'localhost',
   port: 5432,
-  user: 'user',
-  password: 'pass',
-  database: 'testdb'
+  user: 'postgres',
+  password: 'testUser',
+  database: 'loopback4'
 };
 
 // Observe application's life cycle to disconnect the datasource when
