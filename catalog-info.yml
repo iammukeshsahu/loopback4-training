@@ -1,0 +1,12 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: auth
+  description: 
+  annotations:
+    github.com/project-slug: /auth
+    backstage.io/techdocs-ref: dir:../
+spec:
+  type: website
+  lifecycle: experimental
+  owner: 

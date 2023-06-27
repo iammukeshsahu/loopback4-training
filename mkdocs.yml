@@ -1,0 +1,8 @@
+site_name: auth
+site_description: 
+
+nav:
+  - Introduction: README.md
+
+plugins:
+  - techdocs-core
