@@ -1,9 +1,12 @@
-import { Entity, model, property, belongsTo } from '@loopback/repository';
+import { model, property } from '@loopback/repository';
 import { Role } from './role.model';
 import { Customer } from './customer.model';
+import {SoftDeleteEntity} from 'loopback4-soft-delete';
 
-@model()
-export class Users extends Entity {
+@model({
+  name: 'users',
+})
+export class Users extends SoftDeleteEntity {
   @property({
     type: 'number',
     id: true,
@@ -60,11 +63,11 @@ export class Users extends Entity {
   })
   phoneNumber: string;
 
-  @belongsTo(() => Customer)
-  customerId: string;
+  // @belongsTo(() => Customer)
+  // customerId: string;
 
-  @belongsTo(() => Role)
-  roleId: string;
+  // @belongsTo(() => Role)
+  // roleId: string;
 
 
   constructor(data?: Partial<Users>) {
