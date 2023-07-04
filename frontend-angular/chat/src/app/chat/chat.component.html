@@ -1,0 +1,28 @@
+<!-- <div class="chat-container">
+  <div class="chat-messages">
+    <div class="message" *ngFor="let message of messages">
+      <span class="sender">{{ message }}</span>
+      <span class="content">{{ message }}</span>
+    </div>
+  </div>
+  <div class="chat-input">
+    <input type="text" [(ngModel)]="messages" placeholder="Type your message..." />
+    <button (click)="sendMessage({ message: 'hello' }, 'User', 'http://www.reactiongifs.com/r/wnd1.gif')">Send</button>
+  </div>
+</div> -->
+
+<!-- <lib-ngx-notification></lib-ngx-notification>  -->
+<nb-layout>
+  <nb-layout-column>
+    <nb-chat title="User" size="medium">
+      <nb-chat-message *ngFor="let msg of messages" [message]="msg.body" [sender]="msg.sender" [reply]="msg.reply">
+      </nb-chat-message>
+      <nb-chat-form (send)="
+          sendMessage($event, 'User', 'http://www.reactiongifs.com/r/wnd1.gif')
+        " [showButton]="false" [dropFiles]="true">
+      </nb-chat-form>
+    </nb-chat>
+  </nb-layout-column>
+</nb-layout>
+
+
