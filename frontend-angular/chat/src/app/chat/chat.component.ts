@@ -164,7 +164,6 @@ export class ChatComponent {
       channelId: this.channelUUID,
       channelType: '0',
     };
-    console.log('this.token :>> ', this.token);
     this.userHttpService.post(dbMessage, this.token).subscribe(response => {
       this.messages.push(chatMessage);
     });

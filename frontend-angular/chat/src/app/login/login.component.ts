@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit {
 
     if (!this.validateForm() && this.loginForm.invalid) {
       return;
-    }console.log('1-------------------login');
+    }
     this.loading = true;
     this.authenticationService
       .login(this.f['username'].value, this.f['password'].value)
