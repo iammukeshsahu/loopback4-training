@@ -1,0 +1,6 @@
+[submodule "auth"]
+	path = auth
+	url = https://github.com/iammukeshsahu/loopback4-training.git
+[submodule "monorepo"]
+	path = monorepo
+	url = https://github.com/iammukeshsahu/loopback4-training.git
